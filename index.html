@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMind AI - Crea Quizzes Inteligentes con IA</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>QuizMind AI</h1>
+            </div>
+            <div class="header-controls">
+                <button id="themeToggle" class="theme-toggle-btn" title="Cambiar tema">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="music-controls">
+                    <button id="musicToggle" class="music-btn">
+                        <i class="fas fa-music"></i>
+                        Música
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Music Player Modal -->
+        <div id="musicModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-music"></i> Reproductor de Música</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="music-tabs">
+                        <button class="music-tab-btn active" data-tab="search">
+                            <i class="fas fa-search"></i>
+                            Buscar Música
+                        </button>
+                        <button class="music-tab-btn" data-tab="url">
+                            <i class="fas fa-link"></i>
+                            URL Directa
+                        </button>
+                    </div>
+                    
+                    <div id="searchTab" class="music-tab-content active">
+                        <div class="music-search">
+                            <div class="search-input-group">
+                                <input type="text" id="musicSearch" placeholder="Buscar música para estudiar...">
+                                <button id="searchMusic">
+                                    <i class="fas fa-search"></i>
+                                    Buscar
+                                </button>
+                            </div>
+                            <div class="search-suggestions">
+                                <h4>Sugerencias populares para estudiar:</h4>
+                                <div class="suggestion-tags">
+                                    <span class="suggestion-tag" data-search="lofi hip hop study">Lo-Fi Hip Hop</span>
+                                    <span class="suggestion-tag" data-search="classical music study">Música Clásica</span>
+                                    <span class="suggestion-tag" data-search="ambient study music">Ambient</span>
+                                    <span class="suggestion-tag" data-search="jazz study music">Jazz Suave</span>
+                                    <span class="suggestion-tag" data-search="piano study music">Piano Instrumental</span>
+                                    <span class="suggestion-tag" data-search="nature sounds study">Sonidos Naturales</span>
+                                </div>
+                            </div>
+                            <div id="searchResults" class="search-results"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="urlTab" class="music-tab-content">
+                        <div class="music-input">
+                            <label for="musicUrl">Pega el enlace de YouTube o YouTube Music:</label>
+                            <input type="url" id="musicUrl" placeholder="https://www.youtube.com/watch?v=...">
+                            <button id="loadMusic">Cargar Música</button>
+                        </div>
+                    </div>
+                    
+                    <div id="musicPlayer" class="music-player">
+                        <div class="player-controls">
+                            <button id="playPause"><i class="fas fa-play"></i></button>
+                            <button id="stopMusic"><i class="fas fa-stop"></i></button>
+                            <span id="musicTitle">Sin música cargada</span>
+                        </div>
+                        <div class="player-info">
+                            <small id="playerStatus">Selecciona música para comenzar</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: Configuration -->
+        <div id="step1" class="step active">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-cog"></i> Configuración Inicial</h2>
+                    <p>Configura tu API key de Google AI Studio y selecciona el modelo</p>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="apiKey">
+                            <i class="fas fa-key"></i>
+                            API Key de Google AI Studio
+                        </label>
+                        <input type="password" id="apiKey" placeholder="Ingresa tu API key de Google AI Studio">
+                        <small>
+                            <strong>¿No tienes API key?</strong> 
+                            <a href="https://aistudio.google.com/app/apikey" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                                Obtén tu API key gratuita en Google AI Studio
+                            </a>
+                            <br>
+                            <span style="color: var(--text-secondary); font-size: 12px;">
+                                Es gratis y solo toma unos minutos configurarlo
+                            </span>
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="modelSelect">
+                            <i class="fas fa-robot"></i>
+                            Modelo de IA
+                        </label>
+                        <div class="model-selection">
+                            <select id="modelSelect">
+                                <option value="gemini-2.5-flash-preview-0520">Gemini 2.5 Flash Preview 05-20 ⭐ (Recomendado)</option>
+                                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Rápido)</option>
+                                <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash (Experimental)</option>
+                                <option value="gemini-1.5-flash-8b">Gemini 1.5 Flash 8B (Ultra rápido)</option>
+                            </select>
+                            <button type="button" id="refreshModels" class="btn-refresh" title="Actualizar lista de modelos">
+                                <i class="fas fa-sync-alt"></i>
+                                Actualizar modelos
+                            </button>
+                        </div>
+                        <small id="modelStatus">Haz clic en "Actualizar modelos" para obtener la lista más reciente de Google AI Studio</small>
+                        <div class="model-recommendation">
+                            <i class="fas fa-lightbulb"></i>
+                            <strong>Recomendado:</strong> 
+                            <span class="recommended-model">Gemini 2.5 Flash Preview</span> - 
+                            <span class="recommendation-reason">El modelo Flash Preview más actual, gratis y con mejor rendimiento</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="youtubeApiKey">
+                            <i class="fab fa-youtube"></i>
+                            YouTube API Key (Opcional)
+                        </label>
+                        <input type="password" id="youtubeApiKey" placeholder="Para búsqueda real en YouTube (opcional)">
+                        <small>
+                            <strong>Para búsqueda real:</strong> 
+                            <a href="https://console.developers.google.com/" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                                Obtén tu YouTube Data API key
+                            </a>
+                            <br>
+                            <span style="color: var(--text-secondary); font-size: 12px;">
+                                Sin esta key, se usa la biblioteca curada (recomendado para la mayoría de usuarios)
+                            </span>
+                        </small>
+                    </div>
+                    <button id="nextStep1" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i>
+                        Continuar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Content Input -->
+        <div id="step2" class="step">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-file-upload"></i> Contenido del Quiz</h2>
+                    <p>Proporciona el contenido sobre el que quieres ser evaluado</p>
+                </div>
+                <div class="card-body">
+                    <div class="content-tabs">
+                        <button class="tab-btn active" data-tab="text">
+                            <i class="fas fa-keyboard"></i>
+                            Texto Manual
+                        </button>
+                        <button class="tab-btn" data-tab="pdf">
+                            <i class="fas fa-file-pdf"></i>
+                            Archivos PDF/Imágenes
+                        </button>
+                    </div>
+                    
+                    <div id="textTab" class="tab-content active">
+                        <div class="form-group">
+                            <label for="textContent">
+                                <i class="fas fa-edit"></i>
+                                Contenido del tema
+                            </label>
+                            <textarea id="textContent" placeholder="Escribe aquí el contenido sobre el que quieres ser evaluado..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div id="pdfTab" class="tab-content">
+                        <div class="form-group">
+                            <label for="pdfFile">
+                                <i class="fas fa-upload"></i>
+                                Seleccionar archivos (máximo 5)
+                            </label>
+                            <div class="file-upload">
+                                <input type="file" id="pdfFile" accept=".pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp" multiple>
+                                <div class="file-upload-text">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Arrastra tus archivos PDF o imágenes aquí o haz clic para seleccionar</p>
+                                    <small>Soporta: PDF, JPG, PNG, GIF, BMP, WebP • Máximo 5 archivos</small>
+                                </div>
+                            </div>
+                            <div id="fileCounter" class="file-counter">
+                                <span id="fileCount">0</span> / 5 archivos seleccionados
+                            </div>
+                            <div id="pdfPreview" class="pdf-preview"></div>
+                        </div>
+                    </div>
+                    
+                    <button id="nextStep2" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i>
+                        Continuar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Quiz Type Selection -->
+        <div id="step3" class="step">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-question-circle"></i> Tipo de Quiz</h2>
+                    <p>Elige el formato de evaluación que prefieras</p>
+                </div>
+                <div class="card-body">
+                    <div class="quiz-types">
+                        <div class="quiz-type" data-type="multiple-choice">
+                            <div class="quiz-type-icon">
+                                <i class="fas fa-list-ul"></i>
+                            </div>
+                            <h3>Opción Múltiple</h3>
+                            <p>Respuestas con opciones predefinidas</p>
+                            <ul>
+                                <li>4 opciones por pregunta</li>
+                                <li>Calificación automática</li>
+                                <li>Justificación de respuestas</li>
+                            </ul>
+                        </div>
+                        <div class="quiz-type" data-type="open-ended">
+                            <div class="quiz-type-icon">
+                                <i class="fas fa-pen"></i>
+                            </div>
+                            <h3>Respuesta Abierta</h3>
+                            <p>Escribe tus respuestas libremente</p>
+                            <ul>
+                                <li>Respuestas desarrolladas</li>
+                                <li>Evaluación por IA</li>
+                                <li>Feedback detallado</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-settings">
+                        <div class="form-group">
+                            <label for="numQuestions">
+                                <i class="fas fa-hashtag"></i>
+                                Número de preguntas
+                            </label>
+                            <select id="numQuestions">
+                                <option value="5">5 preguntas</option>
+                                <option value="10" selected>10 preguntas</option>
+                                <option value="15">15 preguntas</option>
+                                <option value="20">20 preguntas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="difficulty">
+                                <i class="fas fa-signal"></i>
+                                Dificultad
+                            </label>
+                            <select id="difficulty">
+                                <option value="easy">Fácil</option>
+                                <option value="medium" selected>Intermedio</option>
+                                <option value="hard">Difícil</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button id="generateQuiz" class="btn btn-primary">
+                        <i class="fas fa-magic"></i>
+                        Generar Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Quiz Interface -->
+        <div id="step4" class="step">
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <div class="quiz-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <span class="progress-text">Pregunta <span id="currentQuestion">1</span> de <span id="totalQuestions">10</span></span>
+                    </div>
+                    <div class="quiz-timer">
+                        <i class="fas fa-clock"></i>
+                        <span id="timer">00:00</span>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-number">Pregunta <span id="questionNum">1</span></div>
+                    <div class="question-text" id="questionText"></div>
+                    <div class="question-options" id="questionOptions"></div>
+                    <div class="question-input" id="questionInput" style="display: none;">
+                        <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="quiz-controls">
+                    <button id="prevQuestion" class="btn btn-secondary" disabled>
+                        <i class="fas fa-arrow-left"></i>
+                        Anterior
+                    </button>
+                    <button id="nextQuestion" class="btn btn-primary">
+                        Siguiente
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button id="finishQuiz" class="btn btn-success" style="display: none;">
+                        <i class="fas fa-check"></i>
+                        Finalizar Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Results -->
+        <div id="step5" class="step">
+            <div class="results-container">
+                <div class="results-header">
+                    <div class="score-circle">
+                        <div class="score-value" id="finalScore">0</div>
+                        <div class="score-label">/ 100</div>
+                    </div>
+                    <div class="results-info">
+                        <h2>¡Quiz Completado!</h2>
+                        <div class="results-stats">
+                            <div class="stat">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Correctas: <span id="correctAnswers">0</span></span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-times-circle"></i>
+                                <span>Incorrectas: <span id="incorrectAnswers">0</span></span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-clock"></i>
+                                <span>Tiempo: <span id="totalTime">00:00</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="results-details">
+                    <h3><i class="fas fa-list-alt"></i> Revisión Detallada</h3>
+                    <div id="resultsBreakdown"></div>
+                </div>
+                
+                <div class="results-actions">
+                    <button id="retakeQuiz" class="btn btn-primary">
+                        <i class="fas fa-redo"></i>
+                        Repetir Quiz
+                    </button>
+                    <button id="newQuiz" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i>
+                        Nuevo Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="loading-spinner">
+                <i class="fas fa-brain fa-spin"></i>
+                <p>Generando tu quiz con IA...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <div class="developer-info">
+                    <i class="fas fa-code"></i>
+                    <span>Desarrollado por <strong>Geronimo Facundo Moreira</strong></span>
+                </div>
+                <div class="footer-links">
+                    <span class="footer-year">© 2025</span>
+                    <span class="footer-separator">•</span>
+                    <span class="footer-tech">Powered by Google AI Studio</span>
+                </div>
+            </div>
+            <div class="footer-social">
+                <div class="social-links">
+                    <a href="https://github.com/xxDMONxx" target="_blank" class="social-link" title="GitHub">
+                        <i class="fab fa-github"></i>
+                        GitHub
+                    </a>
+                    <a href="https://www.linkedin.com/in/moreiragf/" target="_blank" class="social-link" title="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                        LinkedIn
+                    </a>
+                </div>
+                <div class="footer-love">
+                    <i class="fas fa-heart"></i>
+                    <span>Hecho con pasión para el aprendizaje</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
