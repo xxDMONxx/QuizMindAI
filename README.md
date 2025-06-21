@@ -8,7 +8,7 @@ Una aplicación web inteligente desarrollada por **Geronimo Facundo Moreira** qu
 - 🐙 **GitHub**: [@xxDMONxx](https://github.com/xxDMONxx)
 - 💼 **LinkedIn**: [moreiragf](https://www.linkedin.com/in/moreiragf/)
 - 💡 **Especialidad**: Robótica, Electrónica, Desarrollo web e Inteligencia Artificial
-- 🎯 **Misión**: Crear herramientas educativas innovadoras que potencien el aprendizaje
+- 🎯 **Misión**: Promover la robótica, electrónica y crear herramientas educativas innovadoras que potencien el aprendizaje
 
 ---
 
