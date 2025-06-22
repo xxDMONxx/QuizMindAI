@@ -10,7 +10,74 @@ let appState = {
     answers: [],
     startTime: null,
     endTime: null,
-    isQuizActive: false
+    isQuizActive: false,
+    language: 'es' // Idioma por defecto
+};
+
+// Traducciones
+const translations = {
+    es: {
+        // Header
+        'Intelligent Quiz Creator': 'Creador de Quizzes Inteligentes',
+        // Step 1
+        'Initial Setup': 'Configuración Inicial',
+        'Configure your Google AI Studio API key and select the model': 'Configura tu API key de Google AI Studio y selecciona el modelo',
+        'Google AI Studio API Key': 'API Key de Google AI Studio',
+        'Enter your Google AI Studio API key': 'Ingresa tu API key de Google AI Studio',
+        "Don't have an API key?": '¿No tienes API key?',
+        'Get your free API key from Google AI Studio': 'Obtén tu API key gratuita en Google AI Studio',
+        "It's free and only takes a few minutes to set up": 'Es gratis y solo toma unos minutos configurarlo',
+        'AI Model': 'Modelo de IA',
+        'Update models': 'Actualizar modelos',
+        'Update model list': 'Actualizar lista de modelos',
+        "Click 'Update models' to get the latest list from Google AI Studio": 'Haz clic en "Actualizar modelos" para obtener la lista más reciente de Google AI Studio',
+        'Recommended:': 'Recomendado:',
+        'The latest Flash Preview model, free and with better performance': 'El modelo Flash Preview más actual, gratis y con mejor rendimiento',
+        'Continue': 'Continuar',
+        // Step 2
+        'Quiz Content': 'Contenido del Quiz',
+        'Provide the content you want to be evaluated on': 'Proporciona el contenido sobre el que quieres ser evaluado',
+        'Manual Text': 'Texto Manual',
+        'PDF/Images Files': 'Archivos PDF/Imágenes',
+        'Topic Content': 'Contenido del tema',
+        'Write here the content you want to be evaluated on...': 'Escribe aquí el contenido sobre el que quieres ser evaluado...',
+        'characters': 'caracteres',
+        'Select files (maximum 5)': 'Seleccionar archivos (máximo 5)',
+        'Drag your PDF or image files here or click to select': 'Arrastra tus archivos PDF o imágenes aquí o haz clic para seleccionar',
+        'Supports: PDF, JPG, PNG, GIF, BMP, WebP • Maximum 5 files': 'Soporta: PDF, JPG, PNG, GIF, BMP, WebP • Máximo 5 archivos',
+        'files selected': 'archivos seleccionados'
+    },
+    en: {
+        // Header
+        'Creador de Quizzes Inteligentes': 'Intelligent Quiz Creator',
+        // Step 1
+        'Configuración Inicial': 'Initial Setup',
+        'Configura tu API key de Google AI Studio y selecciona el modelo': 'Configure your Google AI Studio API key and select the model',
+        'API Key de Google AI Studio': 'Google AI Studio API Key',
+        'Ingresa tu API key de Google AI Studio': 'Enter your Google AI Studio API key',
+        '¿No tienes API key?': "Don't have an API key?",
+        'Obtén tu API key gratuita en Google AI Studio': 'Get your free API key from Google AI Studio',
+        'Es gratis y solo toma unos minutos configurarlo': "It's free and only takes a few minutes to set up",
+        'Modelo de IA': 'AI Model',
+        'Actualizar modelos': 'Update models',
+        'Actualizar lista de modelos': 'Update model list',
+        'Haz clic en "Actualizar modelos" para obtener la lista más reciente de Google AI Studio': "Click 'Update models' to get the latest list from Google AI Studio",
+        'Recomendado:': 'Recommended:',
+        'El modelo Flash Preview más actual, gratis y con mejor rendimiento': 'The latest Flash Preview model, free and with better performance',
+        'Continuar': 'Continue',
+        // Step 2
+        'Contenido del Quiz': 'Quiz Content',
+        'Proporciona el contenido sobre el que quieres ser evaluado': 'Provide the content you want to be evaluated on',
+        'Texto Manual': 'Manual Text',
+        'Archivos PDF/Imágenes': 'PDF/Images Files',
+        'Contenido del tema': 'Topic Content',
+        'Escribe aquí el contenido sobre el que quieres ser evaluado...': 'Write here the content you want to be evaluated on...',
+        'caracteres': 'characters',
+        'Seleccionar archivos (máximo 5)': 'Select files (maximum 5)',
+        'Arrastra tus archivos PDF o imágenes aquí o haz clic para seleccionar': 'Drag your PDF or image files here or click to select',
+        'Soporta: PDF, JPG, PNG, GIF, BMP, WebP • Máximo 5 archivos': 'Supports: PDF, JPG, PNG, GIF, BMP, WebP • Maximum 5 files',
+        'archivos seleccionados': 'files selected'
+    }
 };
 
 // Inicialización de la aplicación
@@ -21,7 +88,60 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeApp() {
     setupEventListeners();
     setupFileUpload();
+    setupLanguageSystem();
     loadSavedData();
+    updateCharacterCounter();
+}
+
+// Sistema de idiomas
+function setupLanguageSystem() {
+    // Cargar idioma guardado
+    const savedLanguage = localStorage.getItem('quiz-language') || 'es';
+    appState.language = savedLanguage;
+    updateLanguageDisplay();
+    
+    // Event listener para cambio de idioma
+    document.getElementById('languageToggle').addEventListener('click', toggleLanguage);
+}
+
+function toggleLanguage() {
+    appState.language = appState.language === 'es' ? 'en' : 'es';
+    localStorage.setItem('quiz-language', appState.language);
+    updateLanguageDisplay();
+}
+
+function updateLanguageDisplay() {
+    const currentLangSpan = document.getElementById('currentLang');
+    currentLangSpan.textContent = appState.language.toUpperCase();
+    
+    // Actualizar todos los elementos con data-es y data-en
+    document.querySelectorAll('[data-es][data-en]').forEach(element => {
+        const text = appState.language === 'es' ? element.getAttribute('data-es') : element.getAttribute('data-en');
+        element.textContent = text;
+    });
+    
+    // Actualizar placeholders
+    document.querySelectorAll('[data-placeholder-es][data-placeholder-en]').forEach(element => {
+        const placeholder = appState.language === 'es' ? element.getAttribute('data-placeholder-es') : element.getAttribute('data-placeholder-en');
+        element.placeholder = placeholder;
+    });
+    
+    // Actualizar títulos
+    document.querySelectorAll('[data-title-es][data-title-en]').forEach(element => {
+        const title = appState.language === 'es' ? element.getAttribute('data-title-es') : element.getAttribute('data-title-en');
+        element.title = title;
+    });
+}
+
+function updateCharacterCounter() {
+    const textContent = document.getElementById('textContent');
+    const charCount = document.getElementById('charCount');
+    
+    if (textContent && charCount) {
+        textContent.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+    }
 }
 
 function setupEventListeners() {

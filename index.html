@@ -14,127 +14,197 @@
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <div class="logo">
-                <i class="fas fa-brain"></i>
-                <h1>QuizMind AI</h1>
-            </div>
-            <div class="header-controls">
-                <button id="themeToggle" class="theme-toggle-btn" title="Cambiar tema">
-                    <i class="fas fa-moon"></i>
-                </button>
+            <div class="header-container">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>QuizMind AI</h1>
+                        <span class="logo-subtitle" data-en="Intelligent Quiz Creator" data-es="Creador de Quizzes Inteligentes">Creador de Quizzes Inteligentes</span>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <div class="language-selector">
+                        <button id="languageToggle" class="language-btn" title="Change Language / Cambiar Idioma">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">ES</span>
+                        </button>
+                    </div>
+                    <button id="themeToggle" class="theme-toggle-btn" title="Cambiar tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
             </div>
         </header>
 
         <!-- Step 1: Configuration -->
         <div id="step1" class="step active">
-            <div class="card">
-                <div class="card-header">
-                    <h2><i class="fas fa-cog"></i> Configuración Inicial</h2>
-                    <p>Configura tu API key de Google AI Studio y selecciona el modelo</p>
+            <div class="card modern-card">
+                <div class="card-header gradient-header">
+                    <div class="header-content">
+                        <div class="header-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="header-text">
+                            <h2 data-en="Initial Setup" data-es="Configuración Inicial">Configuración Inicial</h2>
+                            <p data-en="Configure your Google AI Studio API key and select the model" data-es="Configura tu API key de Google AI Studio y selecciona el modelo">Configura tu API key de Google AI Studio y selecciona el modelo</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="apiKey">
-                            <i class="fas fa-key"></i>
-                            API Key de Google AI Studio
-                        </label>
-                        <input type="password" id="apiKey" placeholder="Ingresa tu API key de Google AI Studio">
-                        <small>
-                            <strong>¿No tienes API key?</strong> 
-                            <a href="https://aistudio.google.com/app/apikey" target="_blank">
-                                <i class="fas fa-external-link-alt"></i>
-                                Obtén tu API key gratuita en Google AI Studio
-                            </a>
-                            <br>
-                            <span style="color: var(--text-secondary); font-size: 12px;">
-                                Es gratis y solo toma unos minutos configurarlo
-                            </span>
-                        </small>
-                    </div>
-                    <div class="form-group">
-                        <label for="modelSelect">
-                            <i class="fas fa-robot"></i>
-                            Modelo de IA
-                        </label>
-                        <div class="model-selection">
-                            <select id="modelSelect">
-                                <option value="gemini-2.5-flash-preview-0520">Gemini 2.5 Flash Preview 05-20 ⭐ (Recomendado)</option>
-                                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Rápido)</option>
-                                <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash (Experimental)</option>
-                                <option value="gemini-1.5-flash-8b">Gemini 1.5 Flash 8B (Ultra rápido)</option>
-                            </select>
-                            <button type="button" id="refreshModels" class="btn-refresh" title="Actualizar lista de modelos">
-                                <i class="fas fa-sync-alt"></i>
-                                Actualizar modelos
-                            </button>
+                <div class="card-body modern-body">
+                    <div class="form-section">
+                        <div class="form-group enhanced-group">
+                            <label for="apiKey" class="modern-label">
+                                <div class="label-icon">
+                                    <i class="fas fa-key"></i>
+                                </div>
+                                <span data-en="Google AI Studio API Key" data-es="API Key de Google AI Studio">API Key de Google AI Studio</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="password" id="apiKey" class="modern-input" placeholder="Ingresa tu API key de Google AI Studio" data-placeholder-en="Enter your Google AI Studio API key" data-placeholder-es="Ingresa tu API key de Google AI Studio">
+                                <div class="input-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                            </div>
+                            <div class="help-text">
+                                <div class="help-content">
+                                    <strong data-en="Don't have an API key?" data-es="¿No tienes API key?">¿No tienes API key?</strong> 
+                                    <a href="https://aistudio.google.com/app/apikey" target="_blank" class="help-link">
+                                        <i class="fas fa-external-link-alt"></i>
+                                        <span data-en="Get your free API key from Google AI Studio" data-es="Obtén tu API key gratuita en Google AI Studio">Obtén tu API key gratuita en Google AI Studio</span>
+                                    </a>
+                                    <br>
+                                    <span class="help-subtitle" data-en="It's free and only takes a few minutes to set up" data-es="Es gratis y solo toma unos minutos configurarlo">Es gratis y solo toma unos minutos configurarlo</span>
+                                </div>
+                            </div>
                         </div>
-                        <small id="modelStatus">Haz clic en "Actualizar modelos" para obtener la lista más reciente de Google AI Studio</small>
-                        <div class="model-recommendation">
-                            <i class="fas fa-lightbulb"></i>
-                            <strong>Recomendado:</strong> 
-                            <span class="recommended-model">Gemini 2.5 Flash Preview</span> - 
-                            <span class="recommendation-reason">El modelo Flash Preview más actual, gratis y con mejor rendimiento</span>
+
+                        <div class="form-group enhanced-group">
+                            <label for="modelSelect" class="modern-label">
+                                <div class="label-icon">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <span data-en="AI Model" data-es="Modelo de IA">Modelo de IA</span>
+                            </label>
+                            <div class="model-selection enhanced-selection">
+                                <div class="select-wrapper">
+                                    <select id="modelSelect" class="modern-select">
+                                        <option value="gemini-2.5-flash-preview-0520">Gemini 2.5 Flash Preview 05-20 ⭐ (Recomendado)</option>
+                                        <option value="gemini-1.5-flash">Gemini 1.5 Flash (Rápido)</option>
+                                        <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash (Experimental)</option>
+                                        <option value="gemini-1.5-flash-8b">Gemini 1.5 Flash 8B (Ultra rápido)</option>
+                                    </select>
+                                    <div class="select-arrow">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                <button type="button" id="refreshModels" class="btn-refresh modern-refresh" title="Actualizar lista de modelos" data-title-en="Update model list" data-title-es="Actualizar lista de modelos">
+                                    <i class="fas fa-sync-alt"></i>
+                                    <span data-en="Update models" data-es="Actualizar modelos">Actualizar modelos</span>
+                                </button>
+                            </div>
+                            <small id="modelStatus" class="model-status" data-en="Click 'Update models' to get the latest list from Google AI Studio" data-es="Haz clic en 'Actualizar modelos' para obtener la lista más reciente de Google AI Studio">Haz clic en "Actualizar modelos" para obtener la lista más reciente de Google AI Studio</small>
+                            <div class="model-recommendation enhanced-recommendation">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div class="recommendation-content">
+                                    <strong data-en="Recommended:" data-es="Recomendado:">Recomendado:</strong> 
+                                    <span class="recommended-model">Gemini 2.5 Flash Preview</span> - 
+                                    <span class="recommendation-reason" data-en="The latest Flash Preview model, free and with better performance" data-es="El modelo Flash Preview más actual, gratis y con mejor rendimiento">El modelo Flash Preview más actual, gratis y con mejor rendimiento</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <button id="nextStep1" class="btn btn-primary">
-                        <i class="fas fa-arrow-right"></i>
-                        Continuar
-                    </button>
+                    
+                    <div class="action-section">
+                        <button id="nextStep1" class="btn btn-primary modern-btn">
+                            <span data-en="Continue" data-es="Continuar">Continuar</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Step 2: Content Input -->
         <div id="step2" class="step">
-            <div class="card">
-                <div class="card-header">
-                    <h2><i class="fas fa-file-upload"></i> Contenido del Quiz</h2>
-                    <p>Proporciona el contenido sobre el que quieres ser evaluado</p>
-                </div>
-                <div class="card-body">
-                    <div class="content-tabs">
-                        <button class="tab-btn active" data-tab="text">
-                            <i class="fas fa-keyboard"></i>
-                            Texto Manual
-                        </button>
-                        <button class="tab-btn" data-tab="pdf">
-                            <i class="fas fa-file-pdf"></i>
-                            Archivos PDF/Imágenes
-                        </button>
-                    </div>
-                    <div id="textTab" class="tab-content active">
-                        <div class="form-group">
-                            <label for="textContent">
-                                <i class="fas fa-edit"></i>
-                                Contenido del tema
-                            </label>
-                            <textarea id="textContent" placeholder="Escribe aquí el contenido sobre el que quieres ser evaluado..."></textarea>
+            <div class="card modern-card">
+                <div class="card-header gradient-header">
+                    <div class="header-content">
+                        <div class="header-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <div class="header-text">
+                            <h2 data-en="Quiz Content" data-es="Contenido del Quiz">Contenido del Quiz</h2>
+                            <p data-en="Provide the content you want to be evaluated on" data-es="Proporciona el contenido sobre el que quieres ser evaluado">Proporciona el contenido sobre el que quieres ser evaluado</p>
                         </div>
                     </div>
-                    <div id="pdfTab" class="tab-content">
-                        <div class="form-group">
-                            <label for="pdfFile">
-                                <i class="fas fa-upload"></i>
-                                Seleccionar archivos (máximo 5)
+                </div>
+                <div class="card-body modern-body">
+                    <div class="content-tabs modern-tabs">
+                        <button class="tab-btn modern-tab active" data-tab="text">
+                            <i class="fas fa-keyboard"></i>
+                            <span data-en="Manual Text" data-es="Texto Manual">Texto Manual</span>
+                        </button>
+                        <button class="tab-btn modern-tab" data-tab="pdf">
+                            <i class="fas fa-file-pdf"></i>
+                            <span data-en="PDF/Images Files" data-es="Archivos PDF/Imágenes">Archivos PDF/Imágenes</span>
+                        </button>
+                    </div>
+                    
+                    <div id="textTab" class="tab-content active">
+                        <div class="form-group enhanced-group">
+                            <label for="textContent" class="modern-label">
+                                <div class="label-icon">
+                                    <i class="fas fa-edit"></i>
+                                </div>
+                                <span data-en="Topic Content" data-es="Contenido del tema">Contenido del tema</span>
                             </label>
-                            <div class="file-upload">
-                                <input type="file" id="pdfFile" accept=".pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp" multiple>
-                                <div class="file-upload-text">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                    <p>Arrastra tus archivos PDF o imágenes aquí o haz clic para seleccionar</p>
-                                    <small>Soporta: PDF, JPG, PNG, GIF, BMP, WebP • Máximo 5 archivos</small>
+                            <div class="textarea-wrapper">
+                                <textarea id="textContent" class="modern-textarea" placeholder="Escribe aquí el contenido sobre el que quieres ser evaluado..." data-placeholder-en="Write here the content you want to be evaluated on..." data-placeholder-es="Escribe aquí el contenido sobre el que quieres ser evaluado..."></textarea>
+                                <div class="textarea-counter">
+                                    <span id="charCount">0</span> <span data-en="characters" data-es="caracteres">caracteres</span>
                                 </div>
                             </div>
-                            <div id="fileCounter" class="file-counter">
-                                <span id="fileCount">0</span> / 5 archivos seleccionados
-                            </div>
-                            <div id="pdfPreview" class="pdf-preview"></div>
                         </div>
                     </div>
-                    <button id="nextStep2" class="btn btn-primary">
-                        <i class="fas fa-arrow-right"></i>
-                        Continuar
-                    </button>
+                    
+                    <div id="pdfTab" class="tab-content">
+                        <div class="form-group enhanced-group">
+                            <label for="pdfFile" class="modern-label">
+                                <div class="label-icon">
+                                    <i class="fas fa-upload"></i>
+                                </div>
+                                <span data-en="Select files (maximum 5)" data-es="Seleccionar archivos (máximo 5)">Seleccionar archivos (máximo 5)</span>
+                            </label>
+                            <div class="file-upload modern-upload">
+                                <input type="file" id="pdfFile" accept=".pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp" multiple>
+                                <div class="file-upload-content">
+                                    <div class="upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <div class="upload-text">
+                                        <p data-en="Drag your PDF or image files here or click to select" data-es="Arrastra tus archivos PDF o imágenes aquí o haz clic para seleccionar">Arrastra tus archivos PDF o imágenes aquí o haz clic para seleccionar</p>
+                                        <small data-en="Supports: PDF, JPG, PNG, GIF, BMP, WebP • Maximum 5 files" data-es="Soporta: PDF, JPG, PNG, GIF, BMP, WebP • Máximo 5 archivos">Soporta: PDF, JPG, PNG, GIF, BMP, WebP • Máximo 5 archivos</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="fileCounter" class="file-counter modern-counter">
+                                <i class="fas fa-files"></i>
+                                <span id="fileCount">0</span> / 5 <span data-en="files selected" data-es="archivos seleccionados">archivos seleccionados</span>
+                            </div>
+                            <div id="pdfPreview" class="pdf-preview modern-preview"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-section">
+                        <button id="nextStep2" class="btn btn-primary modern-btn">
+                            <span data-en="Continue" data-es="Continuar">Continuar</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
