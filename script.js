@@ -108,7 +108,6 @@ function loadSavedData() {
 function validateStep1() {
     const apiKey = document.getElementById('apiKey').value.trim();
     const model = document.getElementById('modelSelect').value;
-    const youtubeApiKey = document.getElementById('youtubeApiKey').value.trim();
     
     if (!apiKey) {
         showError('Por favor, ingresa tu API key de Google AI Studio');
@@ -122,10 +121,6 @@ function validateStep1() {
     // Guardar en localStorage
     localStorage.setItem('ai-quiz-api-key', apiKey);
     localStorage.setItem('ai-quiz-model', model);
-    
-    if (youtubeApiKey) {
-        localStorage.setItem('youtube-api-key', youtubeApiKey);
-    }
     
     // Avanzar al siguiente paso
     showStep(2);
