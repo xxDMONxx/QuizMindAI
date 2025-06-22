@@ -10,75 +10,10 @@ let appState = {
     answers: [],
     startTime: null,
     endTime: null,
-    isQuizActive: false,
-    language: 'es' // Idioma por defecto
+    isQuizActive: false
 };
 
-// Traducciones
-const translations = {
-    es: {
-        // Header
-        'Intelligent Quiz Creator': 'Creador de Quizzes Inteligentes',
-        // Step 1
-        'Initial Setup': 'Configuración Inicial',
-        'Configure your Google AI Studio API key and select the model': 'Configura tu API key de Google AI Studio y selecciona el modelo',
-        'Google AI Studio API Key': 'API Key de Google AI Studio',
-        'Enter your Google AI Studio API key': 'Ingresa tu API key de Google AI Studio',
-        "Don't have an API key?": '¿No tienes API key?',
-        'Get your free API key from Google AI Studio': 'Obtén tu API key gratuita en Google AI Studio',
-        "It's free and only takes a few minutes to set up": 'Es gratis y solo toma unos minutos configurarlo',
-        'AI Model': 'Modelo de IA',
-        'Update models': 'Actualizar modelos',
-        'Update model list': 'Actualizar lista de modelos',
-        "Click 'Update models' to get the latest list from Google AI Studio": 'Haz clic en "Actualizar modelos" para obtener la lista más reciente de Google AI Studio',
-        'Recommended:': 'Recomendado:',
-        'The latest Flash Preview model, free and with better performance': 'El modelo Flash Preview más actual, gratis y con mejor rendimiento',
-        'Continue': 'Continuar',
-        // Step 2
-        'Quiz Content': 'Contenido del Quiz',
-        'Provide the content you want to be evaluated on': 'Proporciona el contenido sobre el que quieres ser evaluado',
-        'Manual Text': 'Texto Manual',
-        'PDF/Images Files': 'Archivos PDF/Imágenes',
-        'Topic Content': 'Contenido del tema',
-        'Write here the content you want to be evaluated on...': 'Escribe aquí el contenido sobre el que quieres ser evaluado...',
-        'characters': 'caracteres',
-        'Select files (maximum 5)': 'Seleccionar archivos (máximo 5)',
-        'Drag your PDF or image files here or click to select': 'Arrastra tus archivos PDF o imágenes aquí o haz clic para seleccionar',
-        'Supports: PDF, JPG, PNG, GIF, BMP, WebP • Maximum 5 files': 'Soporta: PDF, JPG, PNG, GIF, BMP, WebP • Máximo 5 archivos',
-        'files selected': 'archivos seleccionados'
-    },
-    en: {
-        // Header
-        'Creador de Quizzes Inteligentes': 'Intelligent Quiz Creator',
-        // Step 1
-        'Configuración Inicial': 'Initial Setup',
-        'Configura tu API key de Google AI Studio y selecciona el modelo': 'Configure your Google AI Studio API key and select the model',
-        'API Key de Google AI Studio': 'Google AI Studio API Key',
-        'Ingresa tu API key de Google AI Studio': 'Enter your Google AI Studio API key',
-        '¿No tienes API key?': "Don't have an API key?",
-        'Obtén tu API key gratuita en Google AI Studio': 'Get your free API key from Google AI Studio',
-        'Es gratis y solo toma unos minutos configurarlo': "It's free and only takes a few minutes to set up",
-        'Modelo de IA': 'AI Model',
-        'Actualizar modelos': 'Update models',
-        'Actualizar lista de modelos': 'Update model list',
-        'Haz clic en "Actualizar modelos" para obtener la lista más reciente de Google AI Studio': "Click 'Update models' to get the latest list from Google AI Studio",
-        'Recomendado:': 'Recommended:',
-        'El modelo Flash Preview más actual, gratis y con mejor rendimiento': 'The latest Flash Preview model, free and with better performance',
-        'Continuar': 'Continue',
-        // Step 2
-        'Contenido del Quiz': 'Quiz Content',
-        'Proporciona el contenido sobre el que quieres ser evaluado': 'Provide the content you want to be evaluated on',
-        'Texto Manual': 'Manual Text',
-        'Archivos PDF/Imágenes': 'PDF/Images Files',
-        'Contenido del tema': 'Topic Content',
-        'Escribe aquí el contenido sobre el que quieres ser evaluado...': 'Write here the content you want to be evaluated on...',
-        'caracteres': 'characters',
-        'Seleccionar archivos (máximo 5)': 'Select files (maximum 5)',
-        'Arrastra tus archivos PDF o imágenes aquí o haz clic para seleccionar': 'Drag your PDF or image files here or click to select',
-        'Soporta: PDF, JPG, PNG, GIF, BMP, WebP • Máximo 5 archivos': 'Supports: PDF, JPG, PNG, GIF, BMP, WebP • Maximum 5 files',
-        'archivos seleccionados': 'files selected'
-    }
-};
+// Variables para música (removidas)
 
 // Inicialización de la aplicación
 document.addEventListener('DOMContentLoaded', function() {
@@ -88,60 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeApp() {
     setupEventListeners();
     setupFileUpload();
-    setupLanguageSystem();
+    setupThemeToggle(); // Agregar configuración del tema
     loadSavedData();
-    updateCharacterCounter();
-}
-
-// Sistema de idiomas
-function setupLanguageSystem() {
-    // Cargar idioma guardado
-    const savedLanguage = localStorage.getItem('quiz-language') || 'es';
-    appState.language = savedLanguage;
-    updateLanguageDisplay();
-    
-    // Event listener para cambio de idioma
-    document.getElementById('languageToggle').addEventListener('click', toggleLanguage);
-}
-
-function toggleLanguage() {
-    appState.language = appState.language === 'es' ? 'en' : 'es';
-    localStorage.setItem('quiz-language', appState.language);
-    updateLanguageDisplay();
-}
-
-function updateLanguageDisplay() {
-    const currentLangSpan = document.getElementById('currentLang');
-    currentLangSpan.textContent = appState.language.toUpperCase();
-    
-    // Actualizar todos los elementos con data-es y data-en
-    document.querySelectorAll('[data-es][data-en]').forEach(element => {
-        const text = appState.language === 'es' ? element.getAttribute('data-es') : element.getAttribute('data-en');
-        element.textContent = text;
-    });
-    
-    // Actualizar placeholders
-    document.querySelectorAll('[data-placeholder-es][data-placeholder-en]').forEach(element => {
-        const placeholder = appState.language === 'es' ? element.getAttribute('data-placeholder-es') : element.getAttribute('data-placeholder-en');
-        element.placeholder = placeholder;
-    });
-    
-    // Actualizar títulos
-    document.querySelectorAll('[data-title-es][data-title-en]').forEach(element => {
-        const title = appState.language === 'es' ? element.getAttribute('data-title-es') : element.getAttribute('data-title-en');
-        element.title = title;
-    });
-}
-
-function updateCharacterCounter() {
-    const textContent = document.getElementById('textContent');
-    const charCount = document.getElementById('charCount');
-    
-    if (textContent && charCount) {
-        textContent.addEventListener('input', function() {
-            charCount.textContent = this.value.length;
-        });
-    }
 }
 
 function setupEventListeners() {
@@ -209,7 +92,6 @@ function loadSavedData() {
     // Cargar datos guardados del localStorage
     const savedApiKey = localStorage.getItem('ai-quiz-api-key');
     const savedModel = localStorage.getItem('ai-quiz-model');
-    const savedYouTubeKey = localStorage.getItem('youtube-api-key');
     
     if (savedApiKey) {
         document.getElementById('apiKey').value = savedApiKey;
@@ -217,10 +99,6 @@ function loadSavedData() {
     
     if (savedModel) {
         document.getElementById('modelSelect').value = savedModel;
-    }
-    
-    if (savedYouTubeKey) {
-        document.getElementById('youtubeApiKey').value = savedYouTubeKey;
     }
 }
 
@@ -384,13 +262,6 @@ function displayFilePreview(files) {
 
 // Función global para remover archivos (llamada desde el HTML)
 window.removeFile = removeFile;
-
-function updatePlayerStatus(message) {
-    const statusElement = document.getElementById('playerStatus');
-    if (statusElement) {
-        statusElement.textContent = message;
-    }
-}
 
 // Función global para remover archivos
 function removeFile(index) {
@@ -823,6 +694,82 @@ ${hasImages ? '- Puedes incluir preguntas sobre el contenido visual de las imág
 }
 
 Responde SOLO con el JSON válido, sin texto adicional.`;
+    } else if (quizType === 'matching') {
+        return `
+Basándote en el siguiente contenido${hasImages ? ' y las imágenes adjuntas' : ''}, genera ${numQuestions} preguntas de unir con flechas de nivel ${difficultyMap[difficulty]}:
+
+CONTENIDO:
+${content}${imageNote}
+
+INSTRUCCIONES:
+- Cada pregunta debe tener elementos para conectar entre dos columnas
+- Una columna (izquierda) con conceptos, términos o elementos
+- Otra columna (derecha) con definiciones, características o elementos relacionados
+- Exactamente 4-5 pares por pregunta para evitar adivinanzas
+- Incluye una explicación de las conexiones correctas
+${hasImages ? '- Puedes incluir preguntas sobre el contenido visual de las imágenes si es relevante' : ''}
+- Usa el siguiente formato JSON:
+
+{
+  "questions": [
+    {
+      "question": "Texto de la pregunta o instrucción",
+      "leftItems": [
+        "Concepto 1",
+        "Concepto 2", 
+        "Concepto 3",
+        "Concepto 4"
+      ],
+      "rightItems": [
+        "Definición 1",
+        "Definición 2",
+        "Definición 3", 
+        "Definición 4"
+      ],
+      "correctMatches": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3
+      },
+      "explanation": "Explicación de por qué cada conexión es correcta"
+    }
+  ]
+}
+
+Responde SOLO con el JSON válido, sin texto adicional.`;
+    } else if (quizType === 'sequence') {
+        return `
+Basándote en el siguiente contenido${hasImages ? ' y las imágenes adjuntas' : ''}, genera ${numQuestions} preguntas de ordenar secuencias de nivel ${difficultyMap[difficulty]}:
+
+CONTENIDO:
+${content}${imageNote}
+
+INSTRUCCIONES:
+- Cada pregunta debe presentar una secuencia de pasos, eventos o elementos que deben ordenarse
+- Proporciona 4-6 elementos desordenados que el usuario debe reordenar
+- Los elementos pueden ser: pasos de un proceso, eventos cronológicos, etapas de desarrollo, etc.
+- Incluye una explicación del orden correcto
+${hasImages ? '- Puedes incluir preguntas sobre el contenido visual de las imágenes si es relevante' : ''}
+- Usa el siguiente formato JSON:
+
+{
+  "questions": [
+    {
+      "question": "Texto de la pregunta o instrucción (ej: 'Ordena los siguientes pasos del proceso...')",
+      "items": [
+        "Primer paso o elemento",
+        "Segundo paso o elemento", 
+        "Tercer paso o elemento",
+        "Cuarto paso o elemento"
+      ],
+      "correctOrder": [0, 1, 2, 3],
+      "explanation": "Explicación del orden correcto y por qué cada elemento va en esa posición"
+    }
+  ]
+}
+
+Responde SOLO con el JSON válido, sin texto adicional.`;
     } else {
         return `
 Basándote en el siguiente contenido${hasImages ? ' y las imágenes adjuntas' : ''}, genera ${numQuestions} preguntas de respuesta abierta de nivel ${difficultyMap[difficulty]}:
@@ -899,43 +846,32 @@ function displayQuestion() {
     // Mostrar pregunta
     document.getElementById('questionText').textContent = question.question;
     
-    // Mostrar opciones o input según el tipo
+    // Obtener contenedores
     const optionsContainer = document.getElementById('questionOptions');
     const inputContainer = document.getElementById('questionInput');
+    const matchingContainer = document.getElementById('matchingContainer');
+    const sequenceContainer = document.getElementById('sequenceContainer');
     
-    if (appState.quizType === 'multiple-choice') {
-        optionsContainer.style.display = 'flex';
-        inputContainer.style.display = 'none';
-        
-        optionsContainer.innerHTML = '';
-        Object.entries(question.options).forEach(([letter, text]) => {
-            const option = document.createElement('div');
-            option.className = 'option';
-            option.dataset.value = letter;
-            
-            const isSelected = appState.answers[appState.currentQuestion] === letter;
-            if (isSelected) {
-                option.classList.add('selected');
-            }
-            
-            option.innerHTML = `
-                <div class="option-letter">${letter}</div>
-                <div class="option-text">${text}</div>
-            `;
-            
-            option.addEventListener('click', () => selectOption(letter));
-            optionsContainer.appendChild(option);
-        });
-    } else {
-        optionsContainer.style.display = 'none';
-        inputContainer.style.display = 'block';
-        
-        const textarea = inputContainer.querySelector('textarea');
-        textarea.value = appState.answers[appState.currentQuestion] || '';
-        
-        textarea.addEventListener('input', (e) => {
-            appState.answers[appState.currentQuestion] = e.target.value;
-        });
+    // Ocultar todos los contenedores primero
+    optionsContainer.style.display = 'none';
+    inputContainer.style.display = 'none';
+    matchingContainer.style.display = 'none';
+    sequenceContainer.style.display = 'none';
+    
+    // Mostrar el contenedor apropiado según el tipo
+    switch(appState.quizType) {
+        case 'multiple-choice':
+            displayMultipleChoice(question, optionsContainer);
+            break;
+        case 'open-ended':
+            displayOpenEnded(inputContainer);
+            break;
+        case 'matching':
+            displayMatching(question, matchingContainer);
+            break;
+        case 'sequence':
+            displaySequence(question, sequenceContainer);
+            break;
     }
     
     // Actualizar controles
@@ -944,6 +880,169 @@ function displayQuestion() {
     const isLastQuestion = appState.currentQuestion === appState.questions.length - 1;
     document.getElementById('nextQuestion').style.display = isLastQuestion ? 'none' : 'inline-flex';
     document.getElementById('finishQuiz').style.display = isLastQuestion ? 'inline-flex' : 'none';
+}
+
+// Mostrar pregunta de opción múltiple
+function displayMultipleChoice(question, container) {
+    container.style.display = 'flex';
+    container.innerHTML = '';
+    
+    Object.entries(question.options).forEach(([letter, text]) => {
+        const option = document.createElement('div');
+        option.className = 'option';
+        option.dataset.value = letter;
+        
+        const isSelected = appState.answers[appState.currentQuestion] === letter;
+        if (isSelected) {
+            option.classList.add('selected');
+        }
+        
+        option.innerHTML = `
+            <div class="option-letter">${letter}</div>
+            <div class="option-text">${text}</div>
+        `;
+        
+        option.addEventListener('click', () => selectOption(letter));
+        container.appendChild(option);
+    });
+}
+
+// Mostrar pregunta abierta
+function displayOpenEnded(container) {
+    container.style.display = 'block';
+    
+    const textarea = container.querySelector('textarea');
+    textarea.value = appState.answers[appState.currentQuestion] || '';
+    
+    textarea.addEventListener('input', (e) => {
+        appState.answers[appState.currentQuestion] = e.target.value;
+    });
+}
+
+// Mostrar pregunta de matching
+function displayMatching(question, container) {
+    container.style.display = 'block';
+    
+    const leftItems = container.querySelector('#leftItems');
+    const rightItems = container.querySelector('#rightItems');
+    const connectionsArea = container.querySelector('#matchingConnections');
+    
+    leftItems.innerHTML = '';
+    rightItems.innerHTML = '';
+    connectionsArea.innerHTML = '';
+    
+    // Crear elementos de la izquierda (mantener orden original)
+    question.leftItems.forEach((item, index) => {
+        const element = document.createElement('div');
+        element.className = 'matching-item left-item';
+        element.dataset.leftIndex = index;
+        element.textContent = item;
+        element.draggable = true;
+        
+        element.addEventListener('dragstart', handleMatchingDragStart);
+        element.addEventListener('dragend', handleMatchingDragEnd);
+        
+        leftItems.appendChild(element);
+    });
+    
+    // Crear elementos de la derecha (desordenados para mayor dificultad)
+    const shuffledRightItems = [...question.rightItems];
+    const shuffledIndices = [...Array(shuffledRightItems.length).keys()];
+    
+    // Algoritmo Fisher-Yates para mezclar las respuestas
+    for (let i = shuffledIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
+    }
+    
+    shuffledIndices.forEach(originalIndex => {
+        const element = document.createElement('div');
+        element.className = 'matching-item right-item';
+        element.dataset.rightIndex = originalIndex; // Mantener índice original para evaluación
+        element.textContent = question.rightItems[originalIndex];
+        
+        element.addEventListener('dragover', handleMatchingDragOver);
+        element.addEventListener('drop', handleMatchingDrop);
+        
+        rightItems.appendChild(element);
+    });
+    
+    // Restaurar conexiones guardadas
+    const savedAnswers = appState.answers[appState.currentQuestion] || {};
+    Object.entries(savedAnswers).forEach(([leftIndex, rightIndex]) => {
+        createMatchingConnection(parseInt(leftIndex), parseInt(rightIndex));
+    });
+    
+    // Mostrar progreso de conexiones
+    updateMatchingProgress(question, savedAnswers);
+}
+
+// Actualizar progreso de matching
+function updateMatchingProgress(question, connections) {
+    const connectionsArea = document.querySelector('#matchingConnections');
+    const existingProgress = connectionsArea.querySelector('.matching-progress');
+    
+    if (existingProgress) {
+        existingProgress.remove();
+    }
+    
+    const totalPairs = question.leftItems.length;
+    const connectedPairs = Object.keys(connections).length;
+    
+    const progressDiv = document.createElement('div');
+    progressDiv.className = 'matching-progress';
+    progressDiv.innerHTML = `
+        <div class="progress-info">
+            <i class="fas fa-link"></i>
+            <span>Conexiones: ${connectedPairs}/${totalPairs}</span>
+        </div>
+    `;
+    
+    connectionsArea.appendChild(progressDiv);
+}
+
+// Mostrar pregunta de secuencia
+function displaySequence(question, container) {
+    container.style.display = 'block';
+    
+    const itemsContainer = container.querySelector('#sequenceItems');
+    itemsContainer.innerHTML = '';
+    
+    // Obtener orden guardado o crear orden aleatorio inicial
+    let itemOrder = appState.answers[appState.currentQuestion];
+    if (!itemOrder) {
+        itemOrder = [...question.items.map((_, index) => index)];
+        // Mezclar aleatoriamente para la primera vez
+        for (let i = itemOrder.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [itemOrder[i], itemOrder[j]] = [itemOrder[j], itemOrder[i]];
+        }
+        appState.answers[appState.currentQuestion] = itemOrder;
+    }
+    
+    // Crear elementos en el orden actual
+    itemOrder.forEach((originalIndex, currentPosition) => {
+        const element = document.createElement('div');
+        element.className = 'sequence-item';
+        element.dataset.originalIndex = originalIndex;
+        element.dataset.currentPosition = currentPosition;
+        element.draggable = true;
+        
+        element.innerHTML = `
+            <div class="sequence-number">${currentPosition + 1}</div>
+            <div class="sequence-text">${question.items[originalIndex]}</div>
+            <div class="sequence-drag-handle">
+                <i class="fas fa-grip-vertical"></i>
+            </div>
+        `;
+        
+        element.addEventListener('dragstart', handleSequenceDragStart);
+        element.addEventListener('dragend', handleSequenceDragEnd);
+        element.addEventListener('dragover', handleSequenceDragOver);
+        element.addEventListener('drop', handleSequenceDrop);
+        
+        itemsContainer.appendChild(element);
+    });
 }
 
 // Seleccionar opción
@@ -955,6 +1054,278 @@ function selectOption(letter) {
         opt.classList.remove('selected');
     });
     document.querySelector(`[data-value="${letter}"]`).classList.add('selected');
+}
+
+// ============================================
+// MATCHING QUIZ DRAG AND DROP FUNCTIONS
+// ============================================
+
+let draggedMatchingItem = null;
+
+function handleMatchingDragStart(e) {
+    draggedMatchingItem = e.target;
+    e.target.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    
+    // Resaltar elementos de destino válidos
+    document.querySelectorAll('.right-item').forEach(item => {
+        item.classList.add('drop-target-highlight');
+    });
+}
+
+function handleMatchingDragEnd(e) {
+    e.target.classList.remove('dragging');
+    draggedMatchingItem = null;
+    
+    // Remover resaltado de elementos de destino
+    document.querySelectorAll('.right-item').forEach(item => {
+        item.classList.remove('drop-target-highlight', 'drop-target-active');
+    });
+}
+
+function handleMatchingDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    
+    if (e.target.classList.contains('right-item')) {
+        e.target.classList.add('drop-target-active');
+    }
+}
+
+function handleMatchingDrop(e) {
+    e.preventDefault();
+    
+    // Remover estados de drop
+    document.querySelectorAll('.right-item').forEach(item => {
+        item.classList.remove('drop-target-active');
+    });
+    
+    if (!draggedMatchingItem || !e.target.classList.contains('right-item')) {
+        return;
+    }
+    
+    const leftIndex = parseInt(draggedMatchingItem.dataset.leftIndex);
+    const rightIndex = parseInt(e.target.dataset.rightIndex);
+    
+    // Guardar la conexión
+    if (!appState.answers[appState.currentQuestion]) {
+        appState.answers[appState.currentQuestion] = {};
+    }
+    appState.answers[appState.currentQuestion][leftIndex] = rightIndex;
+    
+    // Crear conexión visual
+    createMatchingConnection(leftIndex, rightIndex);
+    
+    // Actualizar progreso
+    const question = appState.questions[appState.currentQuestion];
+    updateMatchingProgress(question, appState.answers[appState.currentQuestion]);
+}
+
+function createMatchingConnection(leftIndex, rightIndex) {
+    const leftItem = document.querySelector(`[data-left-index="${leftIndex}"]`);
+    const rightItem = document.querySelector(`[data-right-index="${rightIndex}"]`);
+    const connectionsArea = document.getElementById('matchingConnections');
+    
+    if (!leftItem || !rightItem) return;
+    
+    // Definir colores para las conexiones
+    const connectionColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3'];
+    const connectionId = `connection-${leftIndex}`;
+    
+    // Limpiar clases de conexión anteriores
+    leftItem.className = leftItem.className.replace(/connected-\d+/g, '');
+    rightItem.className = rightItem.className.replace(/connected-\d+/g, '');
+    
+    // Marcar elementos como conectados con color específico
+    leftItem.classList.add('connected', `connected-${leftIndex}`);
+    rightItem.classList.add('connected', `connected-${leftIndex}`);
+    
+    // Agregar número de conexión
+    const connectionNumber = leftIndex + 1;
+    leftItem.setAttribute('data-connection-number', connectionNumber);
+    rightItem.setAttribute('data-connection-number', connectionNumber);
+    
+    // Eliminar conexión existente si la hay
+    const existingConnection = connectionsArea.querySelector(`[data-left="${leftIndex}"]`);
+    if (existingConnection) {
+        existingConnection.remove();
+    }
+    
+    // Crear línea de conexión con animación (solo en desktop)
+    if (window.innerWidth > 768) {
+        createConnectionLine(leftIndex, rightIndex, leftItem, rightItem, connectionsArea);
+    }
+    
+    // Agregar efecto de "pop" cuando se conecta
+    addConnectionEffect(leftItem, rightItem);
+}
+
+// Crear línea de conexión animada
+function createConnectionLine(leftIndex, rightIndex, leftItem, rightItem, connectionsArea) {
+    const line = document.createElement('div');
+    line.className = `connection-line connection-${leftIndex}`;
+    line.dataset.left = leftIndex;
+    line.dataset.right = rightIndex;
+    
+    // Calcular posiciones para la línea SVG
+    const leftRect = leftItem.getBoundingClientRect();
+    const rightRect = rightItem.getBoundingClientRect();
+    const containerRect = connectionsArea.getBoundingClientRect();
+    
+    const startX = leftRect.right - containerRect.left;
+    const startY = leftRect.top + (leftRect.height / 2) - containerRect.top;
+    const endX = rightRect.left - containerRect.left;
+    const endY = rightRect.top + (rightRect.height / 2) - containerRect.top;
+    
+    // Crear SVG con curva
+    const controlX = (startX + endX) / 2;
+    const controlY = Math.min(startY, endY) - 20;
+    
+    line.innerHTML = `
+        <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+            <path class="line-path" d="M ${startX} ${startY} Q ${controlX} ${controlY} ${endX} ${endY}" />
+            <circle cx="${startX}" cy="${startY}" r="4" fill="currentColor" opacity="0.8">
+                <animate attributeName="r" values="4;6;4" dur="1s" repeatCount="1"/>
+            </circle>
+            <circle cx="${endX}" cy="${endY}" r="4" fill="currentColor" opacity="0.8">
+                <animate attributeName="r" values="4;6;4" dur="1s" repeatCount="1"/>
+            </circle>
+        </svg>
+    `;
+    
+    connectionsArea.appendChild(line);
+    
+    // Animar la línea apareciendo
+    const path = line.querySelector('.line-path');
+    const pathLength = path.getTotalLength();
+    path.style.strokeDasharray = pathLength;
+    path.style.strokeDashoffset = pathLength;
+    path.style.animation = `drawLine 0.8s ease-out forwards`;
+}
+
+// Agregar efecto visual cuando se conecta
+function addConnectionEffect(leftItem, rightItem) {
+    // Efecto de "pop" en ambos elementos
+    [leftItem, rightItem].forEach(item => {
+        item.style.transform = 'scale(1.1)';
+        item.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+        
+        setTimeout(() => {
+            item.style.transform = 'scale(1)';
+        }, 300);
+        
+        // Resetear transition después de la animación
+        setTimeout(() => {
+            item.style.transition = 'all 0.3s ease';
+        }, 600);
+    });
+    
+    // Crear efecto de partículas
+    createConnectionParticles(leftItem, rightItem);
+}
+
+// Crear partículas de conexión
+function createConnectionParticles(leftItem, rightItem) {
+    const leftRect = leftItem.getBoundingClientRect();
+    const rightRect = rightItem.getBoundingClientRect();
+    
+    for (let i = 0; i < 6; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'connection-particle';
+        particle.style.position = 'fixed';
+        particle.style.width = '6px';
+        particle.style.height = '6px';
+        particle.style.background = getComputedStyle(leftItem).borderColor;
+        particle.style.borderRadius = '50%';
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '1000';
+        particle.style.left = (leftRect.right - 3) + 'px';
+        particle.style.top = (leftRect.top + leftRect.height / 2 - 3) + 'px';
+        
+        document.body.appendChild(particle);
+        
+        // Animar hacia el elemento derecho
+        const deltaX = rightRect.left - leftRect.right;
+        const deltaY = (rightRect.top + rightRect.height / 2) - (leftRect.top + leftRect.height / 2);
+        
+        particle.style.transition = `all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+        particle.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0)`;
+        particle.style.opacity = '0';
+        
+        // Remover partícula después de la animación
+        setTimeout(() => {
+            if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+            }
+        }, 800);
+    }
+}
+
+// ============================================
+// SEQUENCE QUIZ DRAG AND DROP FUNCTIONS  
+// ============================================
+
+let draggedSequenceItem = null;
+
+function handleSequenceDragStart(e) {
+    draggedSequenceItem = e.target;
+    e.target.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleSequenceDragEnd(e) {
+    e.target.classList.remove('dragging');
+    draggedSequenceItem = null;
+}
+
+function handleSequenceDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+}
+
+function handleSequenceDrop(e) {
+    e.preventDefault();
+    
+    if (!draggedSequenceItem || !e.target.closest('.sequence-item')) {
+        return;
+    }
+    
+    const targetItem = e.target.closest('.sequence-item');
+    if (targetItem === draggedSequenceItem) {
+        return;
+    }
+    
+    const container = document.getElementById('sequenceItems');
+    const allItems = Array.from(container.children);
+    
+    const draggedIndex = allItems.indexOf(draggedSequenceItem);
+    const targetIndex = allItems.indexOf(targetItem);
+    
+    // Reordenar elementos en el DOM
+    if (draggedIndex < targetIndex) {
+        container.insertBefore(draggedSequenceItem, targetItem.nextSibling);
+    } else {
+        container.insertBefore(draggedSequenceItem, targetItem);
+    }
+    
+    // Actualizar números y guardar orden
+    updateSequenceOrder();
+}
+
+function updateSequenceOrder() {
+    const container = document.getElementById('sequenceItems');
+    const items = Array.from(container.children);
+    
+    // Actualizar números visuales y datos
+    const newOrder = items.map((item, index) => {
+        const numberElement = item.querySelector('.sequence-number');
+        numberElement.textContent = index + 1;
+        item.dataset.currentPosition = index;
+        return parseInt(item.dataset.originalIndex);
+    });
+    
+    // Guardar nuevo orden
+    appState.answers[appState.currentQuestion] = newOrder;
 }
 
 // Navegación entre preguntas
@@ -993,11 +1364,44 @@ async function finishQuiz() {
     appState.isQuizActive = false;
     appState.endTime = new Date();
     
-    // Verificar que todas las preguntas estén respondidas
-    const unanswered = appState.answers.filter(answer => !answer || answer.trim() === '').length;
+    // Verificar que todas las preguntas estén respondidas según el tipo de quiz
+    let unanswered = 0;
+    
+    for (let i = 0; i < appState.questions.length; i++) {
+        const answer = appState.answers[i];
+        let isAnswered = false;
+        
+        switch(appState.quizType) {
+            case 'multiple-choice':
+                isAnswered = answer && answer.trim() !== '';
+                break;
+            case 'open-ended':
+                isAnswered = answer && answer.trim() !== '';
+                break;
+            case 'matching':
+                // Para matching, verificar que haya al menos una conexión
+                isAnswered = answer && typeof answer === 'object' && Object.keys(answer).length > 0;
+                break;
+            case 'sequence':
+                isAnswered = answer && Array.isArray(answer) && answer.length > 0;
+                break;
+        }
+        
+        if (!isAnswered) {
+            unanswered++;
+        }
+    }
     
     if (unanswered > 0) {
-        const confirm = window.confirm(`Tienes ${unanswered} pregunta(s) sin responder. ¿Deseas continuar?`);
+        const quizTypeText = {
+            'multiple-choice': 'opción múltiple',
+            'open-ended': 'respuesta abierta', 
+            'matching': 'unir con flechas',
+            'sequence': 'ordenar secuencias'
+        };
+        
+        const message = `Tienes ${unanswered} pregunta(s) de ${quizTypeText[appState.quizType]} sin responder.\n\n¿Deseas continuar con la evaluación?`;
+        const confirm = window.confirm(message);
         if (!confirm) {
             appState.isQuizActive = true;
             return;
@@ -1047,6 +1451,67 @@ async function evaluateQuiz() {
                 isCorrect: isCorrect,
                 explanation: question.explanation,
                 options: question.options
+            });
+        }
+    } else if (appState.quizType === 'matching') {
+        // Evaluación automática para matching
+        for (let i = 0; i < appState.questions.length; i++) {
+            const question = appState.questions[i];
+            const userAnswer = appState.answers[i] || {};
+            const correctMatches = question.correctMatches;
+            
+            let correctCount = 0;
+            let totalMatches = Object.keys(correctMatches).length;
+            
+            // Verificar cada match
+            Object.entries(correctMatches).forEach(([leftIndex, rightIndex]) => {
+                if (userAnswer[leftIndex] && parseInt(userAnswer[leftIndex]) === parseInt(rightIndex)) {
+                    correctCount++;
+                }
+            });
+            
+            const isCorrect = correctCount === totalMatches;
+            const partialScore = totalMatches > 0 ? correctCount / totalMatches : 0;
+            
+            if (isCorrect) {
+                results.correct++;
+            } else {
+                results.incorrect++;
+            }
+            
+            results.details.push({
+                question: question.question,
+                userAnswer: userAnswer,
+                correctMatches: correctMatches,
+                isCorrect: isCorrect,
+                partialScore: partialScore,
+                leftItems: question.leftItems,
+                rightItems: question.rightItems
+            });
+        }
+    } else if (appState.quizType === 'sequence') {
+        // Evaluación automática para secuencias
+        for (let i = 0; i < appState.questions.length; i++) {
+            const question = appState.questions[i];
+            const userAnswer = appState.answers[i] || [];
+            const correctOrder = question.correctOrder;
+            
+            // Verificar si el orden es completamente correcto
+            const isCorrect = userAnswer.length === correctOrder.length && 
+                            userAnswer.every((item, index) => item === correctOrder[index]);
+            
+            if (isCorrect) {
+                results.correct++;
+            } else {
+                results.incorrect++;
+            }
+            
+            results.details.push({
+                question: question.question,
+                userAnswer: userAnswer,
+                correctOrder: correctOrder,
+                isCorrect: isCorrect,
+                items: question.items
             });
         }
     } else {
@@ -1161,34 +1626,154 @@ function displayResults(results) {
     
     results.details.forEach((detail, index) => {
         const item = document.createElement('div');
-        item.className = `result-item ${appState.quizType === 'multiple-choice' ? (detail.isCorrect ? 'correct' : 'incorrect') : (detail.score >= 0.7 ? 'correct' : 'incorrect')}`;
+        item.className = `result-item ${getResultItemClass(detail)}`;
         
-        if (appState.quizType === 'multiple-choice') {
-            item.innerHTML = `
-                <div class="result-question">Pregunta ${index + 1}: ${detail.question}</div>
-                <div class="result-answer">
-                    <strong>Tu respuesta:</strong> ${detail.userAnswer ? `${detail.userAnswer}) ${detail.options[detail.userAnswer]}` : 'Sin respuesta'}
-                </div>
-                <div class="result-answer">
-                    <strong>Respuesta correcta:</strong> ${detail.correctAnswer}) ${detail.options[detail.correctAnswer]}
-                </div>
-                <div class="result-explanation">${detail.explanation}</div>
-            `;
-        } else {
-            item.innerHTML = `
-                <div class="result-question">Pregunta ${index + 1}: ${detail.question}</div>
-                <div class="result-answer">
-                    <strong>Tu respuesta:</strong> ${detail.userAnswer || 'Sin respuesta'}
-                </div>
-                <div class="result-answer">
-                    <strong>Puntuación:</strong> ${Math.round(detail.score * 100)}%
-                </div>
-                <div class="result-explanation">${detail.feedback}</div>
-            `;
+        switch(appState.quizType) {
+            case 'multiple-choice':
+                item.innerHTML = createMultipleChoiceResult(detail, index);
+                break;
+            case 'matching':
+                item.innerHTML = createMatchingResult(detail, index);
+                break;
+            case 'sequence':
+                item.innerHTML = createSequenceResult(detail, index);
+                break;
+            case 'open-ended':
+                item.innerHTML = createOpenEndedResult(detail, index);
+                break;
         }
         
         breakdown.appendChild(item);
     });
+}
+
+// Funciones auxiliares para mostrar resultados
+function getResultItemClass(detail) {
+    if (detail.hasOwnProperty('isCorrect')) {
+        return detail.isCorrect ? 'correct' : 'incorrect';
+    } else if (detail.hasOwnProperty('score')) {
+        return detail.score >= 0.7 ? 'correct' : 'incorrect';
+    }
+    return 'incorrect';
+}
+
+function createMultipleChoiceResult(detail, index) {
+    return `
+        <div class="result-question">Pregunta ${index + 1}: ${detail.question}</div>
+        <div class="result-answer">
+            <strong>Tu respuesta:</strong> ${detail.userAnswer ? `${detail.userAnswer}) ${detail.options[detail.userAnswer]}` : 'Sin respuesta'}
+        </div>
+        <div class="result-answer">
+            <strong>Respuesta correcta:</strong> ${detail.correctAnswer}) ${detail.options[detail.correctAnswer]}
+        </div>
+        <div class="result-explanation">${detail.explanation}</div>
+    `;
+}
+
+function createMatchingResult(detail, index) {
+    let userMatchesHtml = '';
+    let correctMatchesHtml = '';
+    
+    // Mostrar matches del usuario
+    if (Object.keys(detail.userAnswer).length > 0) {
+        Object.entries(detail.userAnswer).forEach(([leftIndex, rightIndex]) => {
+            const leftItem = detail.leftItems[parseInt(leftIndex)];
+            const rightItem = detail.rightItems[parseInt(rightIndex)];
+            userMatchesHtml += `<div class="match-pair">${leftItem} → ${rightItem}</div>`;
+        });
+    } else {
+        userMatchesHtml = '<div class="no-answer">Sin respuestas</div>';
+    }
+    
+    // Mostear matches correctos
+    Object.entries(detail.correctMatches).forEach(([leftIndex, rightIndex]) => {
+        const leftItem = detail.leftItems[parseInt(leftIndex)];
+        const rightItem = detail.rightItems[parseInt(rightIndex)];
+        correctMatchesHtml += `<div class="match-pair">${leftItem} → ${rightItem}</div>`;
+    });
+    
+    return `
+        <div class="result-question">Pregunta ${index + 1}: ${detail.question}</div>
+        <div class="result-answer">
+            <strong>Tus conexiones:</strong>
+            <div class="matches-list">${userMatchesHtml}</div>
+        </div>
+        <div class="result-answer">
+            <strong>Conexiones correctas:</strong>
+            <div class="matches-list">${correctMatchesHtml}</div>
+        </div>
+        <div class="result-score">
+            <strong>Puntuación parcial:</strong> ${Math.round(detail.partialScore * 100)}%
+        </div>
+    `;
+}
+
+function createSequenceResult(detail, index) {
+    let userSequenceHtml = '';
+    let correctSequenceHtml = '';
+    
+    // Mostrar secuencia del usuario
+    if (detail.userAnswer.length > 0) {
+        detail.userAnswer.forEach((itemIndex, position) => {
+            userSequenceHtml += `<div class="sequence-step">${position + 1}. ${detail.items[itemIndex]}</div>`;
+        });
+    } else {
+        userSequenceHtml = '<div class="no-answer">Sin respuesta</div>';
+    }
+    
+    // Mostrar secuencia correcta
+    detail.correctOrder.forEach((itemIndex, position) => {
+        correctSequenceHtml += `<div class="sequence-step">${position + 1}. ${detail.items[itemIndex]}</div>`;
+    });
+    
+    return `
+        <div class="result-question">Pregunta ${index + 1}: ${detail.question}</div>
+        <div class="result-answer">
+            <strong>Tu secuencia:</strong>
+            <div class="sequence-list">${userSequenceHtml}</div>
+        </div>
+        <div class="result-answer">
+            <strong>Secuencia correcta:</strong>
+            <div class="sequence-list">${correctSequenceHtml}</div>
+        </div>
+    `;
+}
+
+function createOpenEndedResult(detail, index) {
+    return `
+        <div class="result-question">Pregunta ${index + 1}: ${detail.question}</div>
+        <div class="result-answer">
+            <strong>Tu respuesta:</strong> ${detail.userAnswer || 'Sin respuesta'}
+        </div>
+        <div class="result-answer">
+            <strong>Puntuación:</strong> ${Math.round(detail.score * 100)}%
+        </div>
+        <div class="result-explanation">${detail.feedback}</div>
+    `;
+}
+
+// ========================
+// AUTOMATIC BACKGROUND FUNCTIONALITY
+// ========================
+
+function applyThemeBackground(theme) {
+    // Remover todas las clases de fondo existentes
+    const backgroundClasses = [
+        'bg-default', 'bg-library', 'bg-study-desk', 
+        'bg-forest', 'bg-mountains', 'bg-ocean', 
+        'bg-geometric', 'bg-gradient', 'bg-minimal'
+    ];
+    
+    backgroundClasses.forEach(cls => {
+        document.body.classList.remove(cls);
+    });
+    
+    // Aplicar fondo según el tema
+    if (theme === 'dark') {
+        document.body.classList.add('bg-study-desk'); // Escritorio de estudio para modo oscuro
+    } else {
+        document.body.classList.add('bg-minimal'); // Minimalista para modo claro
+    }
 }
 
 // Acciones de resultados
@@ -1259,6 +1844,9 @@ function initializeTheme() {
     // Aplicar tema guardado
     document.documentElement.setAttribute('data-theme', savedTheme);
     
+    // Aplicar fondo automático según el tema
+    applyThemeBackground(savedTheme);
+    
     // Actualizar icono
     if (savedTheme === 'dark') {
         themeIcon.className = 'fas fa-sun';
@@ -1279,6 +1867,9 @@ function toggleTheme() {
     // Aplicar nuevo tema
     document.documentElement.setAttribute('data-theme', newTheme);
     
+    // Aplicar fondo automático según el nuevo tema
+    applyThemeBackground(newTheme);
+    
     // Guardar en localStorage
     localStorage.setItem('theme', newTheme);
     
@@ -1297,11 +1888,12 @@ function toggleTheme() {
     }, 150);
 }
 
-// Inicializar tema al cargar la página
-document.addEventListener('DOMContentLoaded', function() {
+// Función para configurar el toggle de tema
+function setupThemeToggle() {
+    // Configurar event listener para el botón de tema
     const themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', toggleTheme);
         initializeTheme();
     }
-});
+}
