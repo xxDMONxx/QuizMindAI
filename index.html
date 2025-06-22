@@ -22,79 +22,8 @@
                 <button id="themeToggle" class="theme-toggle-btn" title="Cambiar tema">
                     <i class="fas fa-moon"></i>
                 </button>
-                <div class="music-controls">
-                    <button id="musicToggle" class="music-btn">
-                        <i class="fas fa-music"></i>
-                        Música
-                    </button>
-                </div>
             </div>
         </header>
-
-        <!-- Music Player Modal -->
-        <div id="musicModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3><i class="fas fa-music"></i> Reproductor de Música</h3>
-                    <span class="close">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <div class="music-tabs">
-                        <button class="music-tab-btn active" data-tab="search">
-                            <i class="fas fa-search"></i>
-                            Buscar Música
-                        </button>
-                        <button class="music-tab-btn" data-tab="url">
-                            <i class="fas fa-link"></i>
-                            URL Directa
-                        </button>
-                    </div>
-                    
-                    <div id="searchTab" class="music-tab-content active">
-                        <div class="music-search">
-                            <div class="search-input-group">
-                                <input type="text" id="musicSearch" placeholder="Buscar música para estudiar...">
-                                <button id="searchMusic">
-                                    <i class="fas fa-search"></i>
-                                    Buscar
-                                </button>
-                            </div>
-                            <div class="search-suggestions">
-                                <h4>Sugerencias populares para estudiar:</h4>
-                                <div class="suggestion-tags">
-                                    <span class="suggestion-tag" data-search="lofi hip hop study">Lo-Fi Hip Hop</span>
-                                    <span class="suggestion-tag" data-search="classical music study">Música Clásica</span>
-                                    <span class="suggestion-tag" data-search="ambient study music">Ambient</span>
-                                    <span class="suggestion-tag" data-search="jazz study music">Jazz Suave</span>
-                                    <span class="suggestion-tag" data-search="piano study music">Piano Instrumental</span>
-                                    <span class="suggestion-tag" data-search="nature sounds study">Sonidos Naturales</span>
-                                </div>
-                            </div>
-                            <div id="searchResults" class="search-results"></div>
-                        </div>
-                    </div>
-                    
-                    <div id="urlTab" class="music-tab-content">
-                        <div class="music-input">
-                            <label for="musicUrl">Pega el enlace de YouTube o YouTube Music:</label>
-                            <input type="url" id="musicUrl" placeholder="https://www.youtube.com/watch?v=...">
-                            <button id="loadMusic">Cargar Música</button>
-                        </div>
-                    </div>
-                    
-                    <div id="musicPlayer" class="music-player">
-                        <div class="player-controls">
-                            <button id="playPause"><i class="fas fa-play"></i></button>
-                            <button id="stopMusic"><i class="fas fa-stop"></i></button>
-                            <span id="musicTitle">Sin música cargada</span>
-                        </div>
-                        <div class="player-info">
-                            <small id="playerStatus">Selecciona música para comenzar</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Step 1: Configuration -->
         <div id="step1" class="step active">
@@ -146,24 +75,6 @@
                             <span class="recommended-model">Gemini 2.5 Flash Preview</span> - 
                             <span class="recommendation-reason">El modelo Flash Preview más actual, gratis y con mejor rendimiento</span>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="youtubeApiKey">
-                            <i class="fab fa-youtube"></i>
-                            YouTube API Key (Opcional)
-                        </label>
-                        <input type="password" id="youtubeApiKey" placeholder="Para búsqueda real en YouTube (opcional)">
-                        <small>
-                            <strong>Para búsqueda real:</strong> 
-                            <a href="https://console.developers.google.com/" target="_blank">
-                                <i class="fas fa-external-link-alt"></i>
-                                Obtén tu YouTube Data API key
-                            </a>
-                            <br>
-                            <span style="color: var(--text-secondary); font-size: 12px;">
-                                Sin esta key, se usa la biblioteca curada (recomendado para la mayoría de usuarios)
-                            </span>
-                        </small>
                     </div>
                     <button id="nextStep1" class="btn btn-primary">
                         <i class="fas fa-arrow-right"></i>
