@@ -935,7 +935,7 @@ function displayMatching(question, container) {
     question.leftItems.forEach((item, index) => {
         const element = document.createElement('div');
         element.className = 'matching-item left-item';
-        element.dataset.leftIndex = index;
+        element.setAttribute('data-left-index', index);
         element.textContent = item;
         element.draggable = true;
         
@@ -958,7 +958,7 @@ function displayMatching(question, container) {
     shuffledIndices.forEach(originalIndex => {
         const element = document.createElement('div');
         element.className = 'matching-item right-item';
-        element.dataset.rightIndex = originalIndex; // Mantener índice original para evaluación
+        element.setAttribute('data-right-index', originalIndex); // Mantener índice original para evaluación
         element.textContent = question.rightItems[originalIndex];
         
         element.addEventListener('dragover', handleMatchingDragOver);
@@ -1104,8 +1104,8 @@ function handleMatchingDrop(e) {
         return;
     }
     
-    const leftIndex = parseInt(draggedMatchingItem.dataset.leftIndex);
-    const rightIndex = parseInt(e.target.dataset.rightIndex);
+    const leftIndex = parseInt(draggedMatchingItem.getAttribute('data-left-index'));
+    const rightIndex = parseInt(e.target.getAttribute('data-right-index'));
     
     // Guardar la conexión
     if (!appState.answers[appState.currentQuestion]) {
@@ -1126,7 +1126,10 @@ function createMatchingConnection(leftIndex, rightIndex) {
     const rightItem = document.querySelector(`[data-right-index="${rightIndex}"]`);
     const connectionsArea = document.getElementById('matchingConnections');
     
-    if (!leftItem || !rightItem) return;
+    if (!leftItem || !rightItem) {
+        console.log('Elementos no encontrados:', { leftIndex, rightIndex, leftItem, rightItem });
+        return;
+    }
     
     // Definir colores para las conexiones
     const connectionColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3'];
